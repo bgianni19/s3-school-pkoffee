@@ -1,0 +1,34 @@
+name: a simple workflow
+
+on: [push]
+
+jobs:
+  code-checks:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout the code
+        uses: actions/checkout@v6
+
+      - name: Install Pixi
+        uses: prefix-dev/setup-pixi@v0.62.2
+
+      - name: Loos for syntax errors
+        uses: pixi run ruff check
+
+      - run: "echo 'start start'"
+      - run: "echo 'repo ${{github.repository}}'"
+
+  unit-tests:
+    runs-on: ubuntu-latest
+    needs: code-checks
+
+    steps:
+      - name: Checkout the code
+        uses: actions/checkout@v6
+
+      - name: Install Pixi
+        uses: prefix-dev/setup-pixi@v0.62.2
+
+      - name: Run unit-tests
+      - run: pixi run -e ${{matrix.environemt}} pytest
